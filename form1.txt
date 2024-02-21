@@ -2,8 +2,10 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
+        private UserList ul;
         public Form1()
         {
+            ul = new UserList();
             InitializeComponent();
         }
 
@@ -58,6 +60,96 @@ namespace WinFormsApp1
             }
             richTextBox1.Text = s;
 
+            string name = textBox1.Text;
+            string gender = "";
+            if (radioButton1.Checked)
+            {
+                gender = "Пол - Ламинат";
+            }
+            if (radioButton2.Checked)
+            {
+                gender = "Пол - Паркет";
+            }
+            string city = comboBox1.SelectedItem.ToString();
+            string sport_ = "";
+            foreach (string elem in checkedListBox1.CheckedItems)
+            {
+                sport_ += elem.ToString() + "\n";
+            }
+            user u = new user(name, city, gender, sport_);
+            ul.AddUser(u);
+            richTextBox1.Text = ul.ToString();
+
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WinFormsApp1
+{
+    internal class UserList
+    {
+        public List<user> Users;
+        public UserList()
+        {
+            Users = new List<user>();
+        }
+        public void AddUser(user user)
+        { Users.Add(user); }
+
+        public string ToString()
+        {
+            string str = "";
+            foreach (user u in Users)
+            {
+                str += u.print() + "\n" + "\n";
+            }
+            return str;
+        }
+
+
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WinFormsApp1
+{
+    internal class user
+    {
+        private string name;
+        public string Name { get { return name;} set { name = value; } }
+
+        private string city;
+        public string City { get { return city; } set { city = value; } }
+
+        private string gender;
+        public string Gender { get { return gender; } set { gender = value; } }
+
+        private string sport;
+        protected string Sport { get { return sport; } set { sport = value; } }
+
+        public user(string name, string city, string gender, string sport)
+        {
+            this.name = name;
+            this.city = city;
+            this.gender = gender;
+            this.sport = sport;
+        }
+
+        public string print()
+        {
+            return name + '\n' + city + '\n' + gender + '\n' + sport;
         }
     }
 }
