@@ -1,0 +1,42 @@
+-- create table client(id_c SERIAL PRiMARY KEY, 
+-- 					name_ varchar(50),
+-- 				    addres varchar(70),
+-- 				    tel varchar(20))
+			
+-- create table product(id_p SERIAL primary key,
+-- 					name_p varchar(50),
+-- 					merge_p varchar(70));
+
+-- create table information(id_info SERIAL Primary key,
+-- 						data_inf date,
+-- 						id_client Serial,
+-- 						sum_inf numeric(20),
+-- 						Foreign Key (id_client) references client(id))
+						
+-- create table decoding(id_dec Serial,
+-- 					    id_n SERIAL, 
+-- 					 	price numeric(10),
+-- 					 	count_inf integer,
+-- 					 	Foreign key (id_dec) references product(id_p),
+-- 					 	Foreign key (id_n) references information(id_info))	
+
+
+create or replace function insert_decoding() returns trigger as $ad_fi_trigger$
+begin
+update decoding set sum_inf = sum_inf + (new.price*new.count_inf) where id_info = new.id_n; 
+return Null;
+end
+$ad_fi_trigger$ Language plpgsql;
+
+create trigger ins_dec after insert on decoding
+for each row execute procedure insert_decoding();
+
+create or replace function delete_decoding() returns trigger as $ad_fi_trigger$
+begin
+update decoding set sum_inf = sum_inf - old.price*old.count_inf where id = old.id_n; 
+return Null;
+end
+$ad_fi_trigger$ Language plpgsql;
+
+create trigger del_dec after delete on decoding
+for each row execute procedure delete_decoding();
